@@ -113,10 +113,9 @@ Go back to the [[Dining Room]] </tw-passagedata><tw-passagedata pid="12" name="B
 
 {(if:($TPInventorySpace + $inventorySpaceUsed &lt;= $maxInventorySpace) and ($showOptionTP is false) and ($TPHeld is false))[{(set:$TPHeld to true)(set:$inventorySpaceUsed to $inventorySpaceUsed + $TPInventorySpace)(set: $timeRemaining to $timeRemaining - $timeToGetTP)}You picked up the toilet paper]
 
-(else-if:($TPInventorySpace + $inventorySpaceUsed &gt; $maxInventorySpace) and ($showOptionTP is false))[{(set:$showOptionTP to true)(set: $timeRemaining to $timeRemaining - $timeToGetTP)}You don&#39;t have enough space for that!]
+(else-if:($TPInventorySpace + $inventorySpaceUsed &gt; $maxInventorySpace) and ($showOptionTP is false))[{&lt;!--(set:$showOptionTP to true)--&gt;(set:$timeRemaining to $timeRemaining - $timeToGetTP)}You don&#39;t have enough space for that!]
 
-}(if:$showOptionTP)[{(set:$showOptionTP to false)}[[Take the Toilet Paper-&gt;Bathroom]]]
-
+}(if:$showOptionTP)[[Take the Toilet Paper]]
 
 You have used $inventorySpaceUsed / $maxInventorySpace available inventory slots
 You have $timeRemaining seconds left
@@ -128,17 +127,20 @@ The [[Bedroom]] is at the end, but the [[Study]] is closer.
 Go back to the [[Living Room]] 
 </tw-passagedata><tw-passagedata pid="14" name="Study" tags="" position="1400,625" size="100,100">Radio
 
-Go back to the [[Hallway]]</tw-passagedata><tw-passagedata pid="15" name="Drawer" tags="" position="1275,875" size="100,100">[[Step away-&gt;Bathroom]] </tw-passagedata><tw-passagedata pid="16" name="Behind the Mirror Cabinet" tags="" position="1400,875" size="100,100">[[Step away-&gt;Bathroom]] </tw-passagedata><tw-passagedata pid="17" name="Deliver items" tags="" position="1550,325" size="100,100">(if:$catHeld)[{(set:$catHeld to false)(set:$catInBunker to true)}$nameOfCat has been placed in the Shelter]
+Go back to the [[Hallway]]</tw-passagedata><tw-passagedata pid="15" name="Drawer" tags="" position="1275,875" size="100,100">{(set:$bathroomFailsafe to true)
+}[[Step away-&gt;Bathroom]] </tw-passagedata><tw-passagedata pid="16" name="Behind the Mirror Cabinet" tags="" position="1400,875" size="100,100">{(set:$bathroomFailsafe to true)
+}[[Step away-&gt;Bathroom]] </tw-passagedata><tw-passagedata pid="17" name="Deliver items" tags="" position="1550,325" size="100,100">(if:$catHeld)[{(set:$catHeld to false)(set:$catInBunker to true)}$nameOfCat has been placed in the Shelter]
 (if:$TPHeld)[{(set:$TPHeld to false)(set:$TPInBunker to true)}Toliet Paper has been placed in the Shelter]
 
 (set:$inventorySpaceUsed to 0)
 
-Go back to the [[Shelter Entrance-&gt;Nuclear Bomb Shelter]]</tw-passagedata><tw-passagedata pid="18" name="Garage" tags="" position="1400,400" size="100,100">
+Go back to the [[Shelter Entrance-&gt;Nuclear Bomb Shelter]]</tw-passagedata><tw-passagedata pid="18" name="Garage" tags="" position="1400,400" size="100,100">Bucket
 
 Go back to the [[Kitchen]]</tw-passagedata><tw-passagedata pid="19" name="Nuclear Bomb Shelter" tags="" position="1400,275" size="100,100">(if:$inventorySpaceUsed &gt; 0)[[Deliver items]]
 [[Enter Bunker-&gt;Finish]]
 
-Go back to the [[Kitchen]]</tw-passagedata></tw-storydata>
+Go back to the [[Kitchen]]</tw-passagedata><tw-passagedata pid="20" name="Take the Toilet Paper" tags="" position="1150,800" size="100,100">(set:$showOptionTP to false)
+(go-to:&quot;Bathroom&quot;)</tw-passagedata></tw-storydata>
 <script title="Twine engine code" data-main="harlowe">(function(){"use strict";
 var require,define;!function(){var e={},r={};require=function(i){var n=e[i];return n&&(r[i]=n[1].apply(void 0,n[0].map(require)),e[i]=void 0),r[i]},(define=function(r,i,n){if("function"==typeof r)return r();e[r]=[i,n]}).amd=!0}();/*!
  * https://github.com/paulmillr/es6-shim
