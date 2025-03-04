@@ -120,7 +120,7 @@ You entered the bunker and closed the door behind you.
 
 (if:($foodInBunker) or ($foodHeld))[You managed to grab some of the essentials, which allow you to comfortably eat without worry of running out of food.](else:)[Unfortunately, you didn&#39;t grab much in terms of food, which includes the food for your cat. (if:($catInBunker) or ($catHeld))[You wonder if it would have been more humane to let $nameOfCat die in the blast.](else:)[At the very least, you only have one mouth you need to worry about feeding.]]
 
-(if:($waterInBunker) or ($waterHeld))[You also got water! Pretty important for your survival. (if:($catInBunker) or ($catHeld))[You&#39;re able to share this extra water with $nameOfCat, yay!]](if:(not $waterInBunker) or (not $waterHeld))[You forgot to snag some extra water, though. (if:($catInBunker) or ($catHeld))[Poor $nameOfCat is gonna be parched...](else:)[At least you don&#39;t need to worry about sharing.]]
+(if:($waterInBunker) or ($waterHeld))[You also got water! Pretty important for your survival.(if:($catInBunker) or ($catHeld))[You&#39;re able to share this extra water with $nameOfCat, yay!]] (if:(not $waterInBunker) or (not $waterHeld))[You forgot to snag some extra water, though. (if:($catInBunker) or ($catHeld))[Poor $nameOfCat is gonna be parched...](else:)[At least you don&#39;t need to worry about sharing.]]
 
 (text-style:&quot;emboss&quot;)[//End.//]</tw-passagedata><tw-passagedata pid="8" name="Living Room" tags="" position="1175,500" size="100,100">The furniture of the Living Room is so nicely arranged. You&#39;re gonna miss your couch.
 
@@ -269,7 +269,7 @@ Go back to the [[Kitchen]]
 (go-to:&quot;Garage&quot;)</tw-passagedata><tw-passagedata pid="33" name="DiningRoomToKitchen" tags="" position="1175,350" size="100,100">(set:$timeRemaining = $timeRemaining - 2)
 (go-to:&quot;Kitchen&quot;)</tw-passagedata><tw-passagedata pid="34" name="KitchenToGarage" tags="" position="1500,400" size="100,100">(set:$timeRemaining = $timeRemaining - 5)
 (go-to:&quot;Garage&quot;)</tw-passagedata><tw-passagedata pid="35" name="KitchenToShelter" tags="" position="1500,250" size="100,100">(set:$timeRemaining = $timeRemaining - 4)
-(go-to:&quot;Nuclear Bomb Shelter&quot;)</tw-passagedata></tw-storydata>
+(go-to:&quot;Nuclear Bomb Shelter&quot;)</tw-passagedata><tw-passagedata pid="36" name="Fail" tags="" position="2000,500" size="100,100">You realize with horror that you ran out of time. You prepare yourself for the incoming blast, and your life flashes through your eyes</tw-passagedata></tw-storydata>
 <script title="Twine engine code" data-main="harlowe">(function(){"use strict";
 var require,define;!function(){var e={},r={};require=function(i){var n=e[i];return n&&(r[i]=n[1].apply(void 0,n[0].map(require)),e[i]=void 0),r[i]},(define=function(r,i,n){if("function"==typeof r)return r();e[r]=[i,n]}).amd=!0}();/*!
  * https://github.com/paulmillr/es6-shim
