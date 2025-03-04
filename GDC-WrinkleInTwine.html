@@ -14,7 +14,7 @@
 
 (live: 5s)[Then you heard the sirens.
 
-A nuclear bomb has entered U.S. airspace. Your property came with a bunker when you bought it, but there are only enough supplies to last you a week in there. You only have $timeRemaining seconds to pack your things and hide in your bunker for safety.
+A nuclear bomb has entered U.S. airspace. Your property came with a fallout shelter when you bought it, but there are only enough supplies to last you a week in there. You only have $timeRemaining seconds to pack your things and hide in your bunker for safety.
 
 [[Grab your things-&gt;Living Room]]]
 </tw-passagedata><tw-passagedata pid="2" name="startup" tags="startup" position="800,500" size="100,100">{(set:$timeRemaining to 60)
@@ -32,18 +32,21 @@ A nuclear bomb has entered U.S. airspace. Your property came with a bunker when 
     
     (set:$catHeld = false)
     (set:$catInBunker = false)
-    (set:$catSurvivalChance to -10)
+    (set:$catSurvivalChance to -15)
     
 (set:$showOptionWater = true)
-	(set:$waterLeft to 3)
+	(set:$waterInventorySpace to 4)
+    (set:$timeToGetWater to 4)
+    (set:$waterHeld = false)
+    (set:$waterInBunker = false)
+    (set:$waterSurvivalChance to 50)
     
 (set:$showOptionFood = true)
-	(set:$foodLeft to 3)
-    (set:$foodInventorySpace to 1)
-    
-    (set:$foodHeldAmount to 0)
-    (set:$foodInBunker to 0)
-    (set:$foodSurvivalChance to 10)
+    (set:$foodInventorySpace to 4)
+    (set:$timeToGetFood to 4)
+    (set:$foodHeld = false)
+    (set:$foodInBunker = false)
+    (set:$foodSurvivalChance to 40)
     
 (set:$showOptionFAK = true)
 	(set:$FAKHeld =false)
@@ -57,7 +60,7 @@ A nuclear bomb has entered U.S. airspace. Your property came with a bunker when 
     (set:$TPInBunker = false)
     (set:$TPInventorySpace to 2)
     (set:$timeToGetTP to 2)
-    (set:$TPSurvivalChance to 5)
+    (set:$TPSurvivalChance to 10)
     
 (set:$showOptionKnife = true)
 	(set:$knifeHeld = false)
@@ -71,7 +74,7 @@ A nuclear bomb has entered U.S. airspace. Your property came with a bunker when 
     (set:$radioInBunker = false)
     (set:$radioInventorySpace to 2)
     (set:$timeToGetRadio to 2)
-    (set:$radioSurvivalChance to 5)
+    (set:$radioSurvivalChance to 15)
     
 (set:$showOptionPills = true)
 	(set:$pillsHeld = false)
@@ -79,11 +82,21 @@ A nuclear bomb has entered U.S. airspace. Your property came with a bunker when 
     (set:$pillsInventorySpace to 1)
     (set:$timeToGetPills to 2)
     (set:$pillsSurvivalChance to 10)
+    
+(set:$showOptionBucket = true)
+	(set:$bucketHeld = false)
+    (set:$bucketInBunker = false)
+    (set:$bucketInventorySpace to 3)
+    (set:$timeToGetBucket to 2)
+    (set:$bucketSurvivalChance to 10)
+    
+(set:$showOptionBag = true)
+	(set:$bagInventorySpaceIncrease to 10)
 
 (set:$nameOfCat to &quot;your cat&quot;)
-(set:$survivalChance to 0)}
+(set:$survivalChance to 0)
 (set:$maxSurvivalChance to $TPSurvivalChance + ($foodSurvivalChance * 3) + $FAKSurvivalChance)
-
+}
 </tw-passagedata><tw-passagedata pid="3" name="Make your choices" tags="" position="600,550" size="100,100">You have used $inventorySpaceUsed / $maxInventorySpace available inventory slots
 You have $timeRemaining seconds left
 
@@ -100,93 +113,163 @@ You have used $inventorySpaceUsed / $maxInventorySpace available inventory slots
 You have $timeRemaining seconds left
 
 [[Search for more items-&gt;Make your choices]]]</tw-passagedata><tw-passagedata pid="5" name="Coax her out" tags="" position="600,350" size="100,100"></tw-passagedata><tw-passagedata pid="6" name="Go to Bunker" tags="" position="600,650" size="100,100">&lt;!--(if:$inventorySpaceUsed &gt; 0)[ [Deliver items]]
-[ [Enter Bunker-&gt;Finish]]--&gt;</tw-passagedata><tw-passagedata pid="7" name="Finish" tags="" position="1775,250" size="100,100">(if:($catInBunker) or ($catHeld))[(set:$survivalChance to $survivalChance + $catSurvivalChance)]
+[ [Enter Bunker-&gt;Finish]]--&gt;</tw-passagedata><tw-passagedata pid="7" name="Finish" tags="" position="1750,200" size="100,100">(if:($catInBunker) or ($catHeld))[(set:$survivalChance to $survivalChance + $catSurvivalChance)]
 You entered the bunker and closed the door behind you.
 
-//End.//</tw-passagedata><tw-passagedata pid="8" name="Living Room" tags="" position="1150,500" size="100,100">The furniture of the Living Room is so nicely arranged. You&#39;re gonna miss your couch.
+(if:($catInBunker) or ($catHeld))[Fortunately, you managed to take $nameOfCat with you. She&#39;s a great comfort.](else:)[You hope $nameOfCat didn&#39;t take it personally when you left her behind. You had to save yourself, after all.]
 
-(if:($catInventorySpace + $inventorySpaceUsed &lt;= $maxInventorySpace) and ($showOptionCat is false))[{(set:$catHeld to true)(set:$inventorySpaceUsed to $inventorySpaceUsed + $catInventorySpace)(set: $timeRemaining to $timeRemaining - $timeToGetCat)}You picked up $nameOfCat and coaxed them into their carrier
+(if:($foodInBunker) or ($foodHeld))[You managed to grab some of the essentials, which allow you to comfortably eat without worry of running out of food.](else:)[Unfortunately, you didn&#39;t grab much in terms of food, which includes the food for your cat. (if:($catInBunker) or ($catHeld))[You wonder if it would have been more humane to let $nameOfCat die in the blast.](else:)[At the very least, you only have one mouth you need to worry about feeding.]]
 
-You have used $inventorySpaceUsed / $maxInventorySpace available inventory slots
-You have $timeRemaining seconds left]
-{(if:($timeRemaining &lt;= 58) and ($showOptionCat))[You spot $nameOfCat hiding under the couch.
-[[Pick up $nameOfCat]]]
+(if:($waterInBunker) or ($waterHeld))[You also got water! Pretty important for your survival. (if:($catInBunker) or ($catHeld))[You&#39;re able to share this extra water with $nameOfCat, yay!]](if:(not $waterInBunker) or (not $waterHeld))[You forgot to snag some extra water, though. (if:($catInBunker) or ($catHeld))[Poor $nameOfCat is gonna be parched...](else:)[At least you don&#39;t need to worry about sharing.]]
 
-You have used $inventorySpaceUsed / $maxInventorySpace available inventory slots
-You have $timeRemaining seconds left]
-(else-if: ($timeRemaining &gt; 58) and ($showOptionCat))[You saw $nameOfCat run down the hall, startled by the sound of the sirens.]
-}
+(text-style:&quot;emboss&quot;)[//End.//]</tw-passagedata><tw-passagedata pid="8" name="Living Room" tags="" position="1175,500" size="100,100">The furniture of the Living Room is so nicely arranged. You&#39;re gonna miss your couch.
+
+(if:($catInventorySpace + $inventorySpaceUsed &lt;= $maxInventorySpace) and ($showOptionCat is false))[{(set:$catHeld to true)(set:$inventorySpaceUsed to $inventorySpaceUsed + $catInventorySpace)(set: $timeRemaining to $timeRemaining - $timeToGetCat)}You picked up (text-colour:lime)[$nameOfCat] and coaxed them into their carrier.
+
+You have used (text-colour:cyan)[$inventorySpaceUsed / $maxInventorySpace] available inventory slots
+You have (text-colour:red)[$timeRemaining] seconds left]
+(else-if:($catInventorySpace + $inventorySpaceUsed &gt; $maxInventorySpace) and ($showOptionCat is false))[{(set:$timeRemaining to $timeRemaining - $timeToGetCat)(text-colour:red)[You don&#39;t have enough space for that!]]
+
+(if:($timeRemaining &lt;= 50) and ($showOptionCat))[(text-colour:cyan)[You spot $nameOfCat hiding under the couch.]
+
+[[Pick up your cat]]
+
+You have used (text-colour:cyan)[$inventorySpaceUsed / $maxInventorySpace] available inventory slots
+You have (text-colour:red)[$timeRemaining] seconds left]
+(else-if: ($timeRemaining &gt; 50) and ($showOptionCat))[(text-colour:cyan)[You saw $nameOfCat run down the hall, startled by the sound of the sirens.]]
+
 
 Run down the [[Hallway]]
-Enter the [[Dining Room]] </tw-passagedata><tw-passagedata pid="9" name="Dining Room" tags="" position="1150,350" size="100,100">Search the [[Kitchen]]
+Enter the [[Dining Room]] </tw-passagedata><tw-passagedata pid="9" name="Dining Room" tags="" position="1075,350" size="100,100">{(set:$timeRemaining = $timeRemaining - 2)}
+Nothing super important in here.
 
-Go back to the [[Living Room]] </tw-passagedata><tw-passagedata pid="10" name="Bedroom" tags="" position="1325,650" size="100,100">Search the [[Bathroom]]
+Search the [[Kitchen-&gt;DiningRoomToKitchen]]
 
-Go back to the [[Hallway]]</tw-passagedata><tw-passagedata pid="11" name="Kitchen" tags="" position="1325,350" size="100,100">The entrance to your [[Nuclear Bomb Shelter]] is outside next to the [[Garage]]
+Go back to the [[Living Room]] </tw-passagedata><tw-passagedata pid="10" name="Bedroom" tags="" position="1600,700" size="100,100">With the way the sun is coming through the windows, you would have thought it were just a normal day. Things change quickly, don&#39;t they?
 
-[[Cabinets]]
-Fridge
-[[Take a knife from the Knife Block]]
+Search the [[Bathroom]]
 
-Go back to the [[Dining Room]] </tw-passagedata><tw-passagedata pid="12" name="Bathroom" tags="" position="1325,800" size="100,100">You just cleaned the bathroom the other day. Bad timing, huh?
+Go back to the [[Hallway-&gt;BedroomToHallway]]</tw-passagedata><tw-passagedata pid="11" name="Kitchen" tags="" position="1325,350" size="100,100">The entrance to your [[Nuclear Bomb Shelter-&gt;KitchenToShelter]] is outside next to the [[Garage-&gt;KitchenToGarage]]
+
+[[Check the Cabinets]]
+{(if:($knifeInventorySpace + $inventorySpaceUsed &lt;= $maxInventorySpace) and ($showOptionKnife is false) and ($knifeHeld is false))[{(set:$knifeHeld to true)(set:$inventorySpaceUsed to $inventorySpaceUsed + $knifeInventorySpace)(set: $timeRemaining to $timeRemaining - $timeToGetKnife)}You picked up a (text-colour:lime)[Knife].]
+
+(else-if:($knifeInventorySpace + $inventorySpaceUsed &gt; $maxInventorySpace) and ($showOptionKnife is false))[{(set:$timeRemaining to $timeRemaining - $timeToGetKnife)}(text-colour:red)[You don&#39;t have enough space for that!]]
+
+}(if:$showOptionKnife)[[Take a knife from the Knife Block]]
+
+You have used (text-colour:cyan)[$inventorySpaceUsed / $maxInventorySpace] available inventory slots
+You have (text-colour:red)[$timeRemaining] seconds left
+
+Go back to the [[Dining Room]] </tw-passagedata><tw-passagedata pid="12" name="Bathroom" tags="" position="1750,700" size="100,100">You just cleaned the bathroom the other day. Bad timing, huh?
 
 [[Drawer]]
 [[Behind the Mirror Cabinet]]
 
 
-{(if:($TPInventorySpace + $inventorySpaceUsed &lt;= $maxInventorySpace) and ($showOptionTP is false) and ($TPHeld is false))[{(set:$TPHeld to true)(set:$inventorySpaceUsed to $inventorySpaceUsed + $TPInventorySpace)(set: $timeRemaining to $timeRemaining - $timeToGetTP)}You picked up the toilet paper]
+{(if:($TPInventorySpace + $inventorySpaceUsed &lt;= $maxInventorySpace) and ($showOptionTP is false) and ($TPHeld is false))[{(set:$TPHeld to true)(set:$inventorySpaceUsed to $inventorySpaceUsed + $TPInventorySpace)(set: $timeRemaining to $timeRemaining - $timeToGetTP)}You picked up the (text-colour:lime)[toilet paper].]
 
-(else-if:($TPInventorySpace + $inventorySpaceUsed &gt; $maxInventorySpace) and ($showOptionTP is false))[{&lt;!--(set:$showOptionTP to true)--&gt;(set:$timeRemaining to $timeRemaining - $timeToGetTP)}You don&#39;t have enough space for that!]
+(else-if:($TPInventorySpace + $inventorySpaceUsed &gt; $maxInventorySpace) and ($showOptionTP is false))[{&lt;!--(set:$showOptionTP to true)--&gt;(set:$timeRemaining to $timeRemaining - $timeToGetTP)}(text-colour:red)[You don&#39;t have enough space for that!]]
 
 }(if:$showOptionTP)[[Take the Toilet Paper]]
 
-You have used $inventorySpaceUsed / $maxInventorySpace available inventory slots
-You have $timeRemaining seconds left
+You have used (text-colour:cyan)[$inventorySpaceUsed / $maxInventorySpace] available inventory slots
+You have (text-colour:red)[$timeRemaining] seconds left
 
 Go back to the [[Bedroom]]</tw-passagedata><tw-passagedata pid="13" name="Hallway" tags="" position="1325,500" size="100,100">There are two doors down the hall.
 
-The [[Bedroom]] is at the end, but the [[Study]] is closer.
+The [[Bedroom-&gt;HallwayToBedroom]] is at the end, but the [[Study-&gt;HallwayToStudy]] is closer.
 
 Go back to the [[Living Room]] 
-</tw-passagedata><tw-passagedata pid="14" name="Study" tags="" position="1450,650" size="100,100">Radio
+</tw-passagedata><tw-passagedata pid="14" name="Study" tags="" position="1600,600" size="100,100">There isn&#39;t much in here that could be helpful for your survival. If you had more time, theres a lot more you would have taken. (if:$showOptionRadio)[(text-colour:cyan)[You //do// spot a radio on top of your expensive cedar desk, though.]]
 
-Go back to the [[Hallway]]</tw-passagedata><tw-passagedata pid="15" name="Drawer" tags="" position="1275,925" size="100,100">{(if:($FAKInventorySpace + $inventorySpaceUsed &lt;= $maxInventorySpace) and ($showOptionFAK is false) and ($FAKHeld is false))[{(set:$FAKHeld to true)(set:$inventorySpaceUsed to $inventorySpaceUsed + $FAKInventorySpace)(set: $timeRemaining to $timeRemaining - $timeToGetFAK)}You picked up the First Aid Kit]
+{(if:($radioInventorySpace + $inventorySpaceUsed &lt;= $maxInventorySpace) and ($showOptionRadio is false) and ($radioHeld is false))[{(set:$radioHeld to true)(set:$inventorySpaceUsed to $inventorySpaceUsed + $radioInventorySpace)(set: $timeRemaining to $timeRemaining - $timeToGetRadio)}You picked up the (text-colour:lime)[Radio].]
 
-(else-if:($FAKInventorySpace + $inventorySpaceUsed &gt; $maxInventorySpace) and ($showOptionFAK is false))[{&lt;!--(set:$showOptionTP to true)--&gt;(set:$timeRemaining to $timeRemaining - $timeToGetFAK)}You don&#39;t have enough space for that!]
+(else-if:($radioInventorySpace + $inventorySpaceUsed &gt; $maxInventorySpace) and ($showOptionRadio is false))[{(set:$timeRemaining to $timeRemaining - $timeToGetRadio)}(text-colour:red)[You don&#39;t have enough space for that!]]
+
+}(if:$showOptionRadio)[[Take the Radio]]
+
+You have used (text-colour:cyan)[$inventorySpaceUsed / $maxInventorySpace] available inventory slots
+You have (text-colour:red)[$timeRemaining] seconds left
+
+Go back to the [[Hallway]]</tw-passagedata><tw-passagedata pid="15" name="Drawer" tags="" position="1700,850" size="100,100">{(if:($FAKInventorySpace + $inventorySpaceUsed &lt;= $maxInventorySpace) and ($showOptionFAK is false) and ($FAKHeld is false))[{(set:$FAKHeld to true)(set:$inventorySpaceUsed to $inventorySpaceUsed + $FAKInventorySpace)(set: $timeRemaining to $timeRemaining - $timeToGetFAK)}You picked up the (text-colour:lime)[First Aid Kit].]
+
+(else-if:($FAKInventorySpace + $inventorySpaceUsed &gt; $maxInventorySpace) and ($showOptionFAK is false))[{&lt;!--(set:$showOptionTP to true)--&gt;(set:$timeRemaining to $timeRemaining - $timeToGetFAK)}(text-colour:red)[You don&#39;t have enough space for that!]]
 
 }(if:$showOptionFAK)[[Grab First Aid Kit]]
 
-You have used $inventorySpaceUsed / $maxInventorySpace available inventory slots
-You have $timeRemaining seconds left
+You have used (text-colour:cyan)[$inventorySpaceUsed / $maxInventorySpace] available inventory slots
+You have (text-colour:red)[$timeRemaining] seconds left
 
-[[Step away-&gt;Bathroom]] </tw-passagedata><tw-passagedata pid="16" name="Behind the Mirror Cabinet" tags="" position="1375,925" size="100,100">It&#39;s full of a bunch of hand creams and hair products. Not very important for where you&#39;re going. (if:$showOptionPills)[A small orange bottle catches your eye, though.]
+[[Step away-&gt;Bathroom]] </tw-passagedata><tw-passagedata pid="16" name="Behind the Mirror Cabinet" tags="" position="1800,850" size="100,100">It&#39;s full of a bunch of hand creams and hair products. Not very important for where you&#39;re going. (if:$showOptionPills)[(text-colour:cyan)[A small orange bottle catches your eye, though.]]
 
-{(if:($pillsInventorySpace + $inventorySpaceUsed &lt;= $maxInventorySpace) and ($showOptionPills is false) and ($pillsHeld is false))[{(set:$pillsHeld to true)(set:$inventorySpaceUsed to $inventorySpaceUsed + $pillsInventorySpace)(set: $timeRemaining to $timeRemaining - $timeToGetPills)}You picked up the Bottle of Pills]
+{(if:($pillsInventorySpace + $inventorySpaceUsed &lt;= $maxInventorySpace) and ($showOptionPills is false) and ($pillsHeld is false))[{(set:$pillsHeld to true)(set:$inventorySpaceUsed to $inventorySpaceUsed + $pillsInventorySpace)(set: $timeRemaining to $timeRemaining - $timeToGetPills)}You picked up the (text-colour:lime)[Bottle of Pills].]
 
-(else-if:($pillsInventorySpace + $inventorySpaceUsed &gt; $maxInventorySpace) and ($showOptionPills is false))[{&lt;!--(set:$showOptionTP to true)--&gt;(set:$timeRemaining to $timeRemaining - $timeToGetPills)}You don&#39;t have enough space for that!]
+(else-if:($pillsInventorySpace + $inventorySpaceUsed &gt; $maxInventorySpace) and ($showOptionPills is false))[{&lt;!--(set:$showOptionTP to true)--&gt;(set:$timeRemaining to $timeRemaining - $timeToGetPills)}(text-colour:red)[You don&#39;t have enough space for that!]]
 
 }(if:$showOptionPills)[[Take the Bottle of Pills]]
 
-You have used $inventorySpaceUsed / $maxInventorySpace available inventory slots
-You have $timeRemaining seconds left
+You have used (text-colour:cyan)[$inventorySpaceUsed / $maxInventorySpace] available inventory slots
+You have (text-colour:red)[$timeRemaining] seconds left
 
-[[Step away-&gt;Bathroom]] </tw-passagedata><tw-passagedata pid="17" name="Deliver items" tags="" position="1775,350" size="100,100">(if:$catHeld)[{(set:$catHeld to false)(set:$catInBunker to true)}$nameOfCat has been placed in the Shelter]
-(if:$TPHeld)[{(set:$TPHeld to false)(set:$TPInBunker to true)}Toliet Paper has been placed in the Shelter]
-(if:$FAKHeld)[{(set:$FAKHeld to false)(set:$FAKInBunker to true)}The First Aid Kit has been placed in the Shelter]
-(if:$pillsHeld)[{(set:$pillsHeld to false)(set:$pillsInBunker to true)}The Bottle of Pills has been placed in the Shelter]
+[[Step away-&gt;Bathroom]] </tw-passagedata><tw-passagedata pid="17" name="Deliver items" tags="" position="1750,300" size="100,100">(if:$catHeld)[{(set:$catHeld to false)(set:$catInBunker to true)}(text-colour:lime)[$nameOfCat] has been placed in the Shelter]
+(if:$TPHeld)[{(set:$TPHeld to false)(set:$TPInBunker to true)}(text-colour:lime)[Toliet Paper] has been placed in the Shelter]
+(if:$FAKHeld)[{(set:$FAKHeld to false)(set:$FAKInBunker to true)}The (text-colour:lime)[First Aid Kit] has been placed in the Shelter]
+(if:$pillsHeld)[{(set:$pillsHeld to false)(set:$pillsInBunker to true)}The (text-colour:lime)[Bottle of Pills] has been placed in the Shelter]
+(if:$radioHeld)[{(set:$radioHeld to false)(set:$radioInBunker to true)}The (text-colour:lime)[Radio] has been placed in the Shelter]
+(if:$knifeHeld)[{(set:$knifeHeld to false)(set:$knifeInBunker to true)}The (text-colour:lime)[Knife] has been placed in the Shelter]
+(if:$foodHeld)[{(set:$foodHeld to false)(set:$foodInBunker to true)}The (text-colour:lime)[Food] has been placed in the Shelter]
+(if:$waterHeld)[{(set:$waterHeld to false)(set:$waterInBunker to true)}The (text-colour:lime)[Water] has been placed in the Shelter]
+(if:$bucketHeld)[{(set:$bucketHeld to false)(set:$bucketInBunker to true)}The (text-colour:lime)[Bucket] has been placed in the Shelter]
 
 (set:$inventorySpaceUsed to 0)
 
-Go back to the [[Shelter Entrance-&gt;Nuclear Bomb Shelter]]</tw-passagedata><tw-passagedata pid="18" name="Garage" tags="" position="1500,400" size="100,100">Bucket
+[[Enter Bunker-&gt;Finish]]
+Go back to the [[Shelter Entrance-&gt;Nuclear Bomb Shelter]]</tw-passagedata><tw-passagedata pid="18" name="Garage" tags="" position="1600,400" size="100,100">(if:$showOptionBucket)[(text-colour:cyan)[There&#39;s a bucket or two in here. Not the most graceful of options for a toilet, but it&#39;d make do.]]
 
-Go back to the [[Kitchen]]</tw-passagedata><tw-passagedata pid="19" name="Nuclear Bomb Shelter" tags="" position="1650,300" size="100,100">(if:$inventorySpaceUsed &gt; 0)[[Deliver items]]
+{(if:($bucketInventorySpace + $inventorySpaceUsed &lt;= $maxInventorySpace) and ($showOptionBucket is false) and ($bucketHeld is false))[{(set:$bucketHeld to true)(set:$inventorySpaceUsed to $inventorySpaceUsed + $bucketInventorySpace)(set: $timeRemaining to $timeRemaining - $timeToGetBucket)}You picked up the (text-colour:lime)[Bucket].]
+
+(else-if:($bucketInventorySpace + $inventorySpaceUsed &gt; $maxInventorySpace) and ($showOptionBucket is false))[{(set:$timeRemaining to $timeRemaining - $timeToGetBucket)}(text-colour:red)[You don&#39;t have enough space for that!]]
+
+}(if:$showOptionBucket)[[Take the Bucket]]
+
+Go back to the [[Kitchen]]
+Go to the [[Nuclear Bomb Shelter]] </tw-passagedata><tw-passagedata pid="19" name="Nuclear Bomb Shelter" tags="" position="1600,250" size="100,100">(if:$inventorySpaceUsed &gt; 0)[[Deliver items]]
 [[Enter Bunker-&gt;Finish]]
 
-Go back to the [[Kitchen]]</tw-passagedata><tw-passagedata pid="20" name="Take the Toilet Paper" tags="" position="1200,800" size="100,100">(set:$showOptionTP to false)
-(go-to:&quot;Bathroom&quot;)</tw-passagedata><tw-passagedata pid="21" name="Pick up $nameOfCat" tags="" position="1150,625" size="100,100">(set:$showOptionCat to false)
-(go-to:&quot;Living Room&quot;)</tw-passagedata><tw-passagedata pid="22" name="Take a knife from the Knife Block" tags="" position="1275,200" size="100,100"></tw-passagedata><tw-passagedata pid="23" name="Cabinets" tags="" position="1375,200" size="100,100">[[Take canned food]]</tw-passagedata><tw-passagedata pid="24" name="Grab First Aid Kit" tags="" position="1275,1050" size="100,100">(set:$showOptionFAK to false)
-(go-to:&quot;Drawer&quot;)</tw-passagedata><tw-passagedata pid="25" name="Take the Bottle of Pills" tags="" position="1375,1050" size="100,100">(set:$showOptionPills to false)
-(go-to:&quot;Behind the Mirror Cabinet&quot;)</tw-passagedata><tw-passagedata pid="26" name="Take canned food" tags="" position="1375,75" size="100,100"></tw-passagedata></tw-storydata>
+Go back to the [[Kitchen]]
+Go to the [[Garage]] </tw-passagedata><tw-passagedata pid="20" name="Take the Toilet Paper" tags="" position="1900,750" size="100,100">(set:$showOptionTP to false)
+(go-to:&quot;Bathroom&quot;)</tw-passagedata><tw-passagedata pid="21" name="Pick up your cat" tags="" position="1175,625" size="100,100">(set:$showOptionCat to false)
+(go-to:&quot;Living Room&quot;)</tw-passagedata><tw-passagedata pid="22" name="Take a knife from the Knife Block" tags="" position="1225,200" size="100,100">(set:$showOptionKnife to false)
+(go-to:&quot;Kitchen&quot;)</tw-passagedata><tw-passagedata pid="23" name="Check the Cabinets" tags="" position="1325,200" size="100,100">{(if:($foodInventorySpace + $inventorySpaceUsed &lt;= $maxInventorySpace) and ($showOptionFood is false) and ($foodHeld is false))[{(set:$foodHeld to true)(set:$inventorySpaceUsed to $inventorySpaceUsed + $foodInventorySpace)(set: $timeRemaining to $timeRemaining - $timeToGetFood)}You picked up as many (text-colour:lime)[food cans] as you could carry.]
+
+(else-if:($foodInventorySpace + $inventorySpaceUsed &gt; $maxInventorySpace) and ($showOptionFood is false))[{(set:$timeRemaining to $timeRemaining - $timeToGetFood)}(text-colour:red)[You don&#39;t have enough space for that!]]
+
+}(if:$showOptionFood)[[Take canned food]]
+{(if:($waterInventorySpace + $inventorySpaceUsed &lt;= $maxInventorySpace) and ($showOptionWater is false) and ($waterHeld is false))[{(set:$waterHeld to true)(set:$inventorySpaceUsed to $inventorySpaceUsed + $waterInventorySpace)(set: $timeRemaining to $timeRemaining - $timeToGetWater)}You picked up as many (text-colour:lime)[bottles of water] as you could carry.]
+
+(else-if:($waterInventorySpace + $inventorySpaceUsed &gt; $maxInventorySpace) and ($showOptionWater is false))[{(set:$timeRemaining to $timeRemaining - $timeToGetWater)}(text-colour:red)[You don&#39;t have enough space for that!]]
+
+}(if:$showOptionWater)[[Take water]]
+
+You have used (text-colour:cyan)[$inventorySpaceUsed / $maxInventorySpace] available inventory slots
+You have (text-colour:red)[$timeRemaining] seconds left
+
+Go back to the [[Kitchen]]
+
+</tw-passagedata><tw-passagedata pid="24" name="Grab First Aid Kit" tags="" position="1700,975" size="100,100">(set:$showOptionFAK to false)
+(go-to:&quot;Drawer&quot;)</tw-passagedata><tw-passagedata pid="25" name="Take the Bottle of Pills" tags="" position="1800,975" size="100,100">(set:$showOptionPills to false)
+(go-to:&quot;Behind the Mirror Cabinet&quot;)</tw-passagedata><tw-passagedata pid="26" name="Take canned food" tags="" position="1375,75" size="100,100">(set:$showOptionFood to false)
+(go-to:&quot;Check the Cabinets&quot;)</tw-passagedata><tw-passagedata pid="27" name="Take the Radio" tags="" position="1750,600" size="100,100">(set:$showOptionRadio to false)
+(go-to:&quot;Study&quot;)</tw-passagedata><tw-passagedata pid="28" name="Take water" tags="" position="1275,75" size="100,100">(set:$showOptionWater to false)
+(go-to:&quot;Check the Cabinets&quot;)</tw-passagedata><tw-passagedata pid="29" name="HallwayToBedroom" tags="" position="1400,700" size="100,100">(set:$timeRemaining = $timeRemaining - 5)
+(go-to:&quot;Bedroom&quot;)</tw-passagedata><tw-passagedata pid="30" name="BedroomToHallway" tags="" position="1500,700" size="100,100">(set:$timeRemaining = $timeRemaining - 2)
+(go-to:&quot;Hallway&quot;)</tw-passagedata><tw-passagedata pid="31" name="HallwayToStudy" tags="" position="1500,600" size="100,100">(set:$timeRemaining = $timeRemaining - 3)
+(go-to:&quot;Study&quot;)</tw-passagedata><tw-passagedata pid="32" name="Take the Bucket" tags="" position="1750,450" size="100,100">(set:$showOptionBucket to false)
+(go-to:&quot;Garage&quot;)</tw-passagedata><tw-passagedata pid="33" name="DiningRoomToKitchen" tags="" position="1175,350" size="100,100">(set:$timeRemaining = $timeRemaining - 2)
+(go-to:&quot;Kitchen&quot;)</tw-passagedata><tw-passagedata pid="34" name="KitchenToGarage" tags="" position="1500,400" size="100,100">(set:$timeRemaining = $timeRemaining - 5)
+(go-to:&quot;Garage&quot;)</tw-passagedata><tw-passagedata pid="35" name="KitchenToShelter" tags="" position="1500,250" size="100,100">(set:$timeRemaining = $timeRemaining - 4)
+(go-to:&quot;Nuclear Bomb Shelter&quot;)</tw-passagedata></tw-storydata>
 <script title="Twine engine code" data-main="harlowe">(function(){"use strict";
 var require,define;!function(){var e={},r={};require=function(i){var n=e[i];return n&&(r[i]=n[1].apply(void 0,n[0].map(require)),e[i]=void 0),r[i]},(define=function(r,i,n){if("function"==typeof r)return r();e[r]=[i,n]}).amd=!0}();/*!
  * https://github.com/paulmillr/es6-shim
